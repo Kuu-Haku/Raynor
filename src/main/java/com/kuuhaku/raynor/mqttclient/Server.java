@@ -33,9 +33,13 @@ public class Server {
 
     private MqttClient client;
 
+    private String[] subscribeUsage;
 
-    @PostConstruct
-    private void connect() throws MqttException, UnsupportedEncodingException {
+    public void setSubscribeUsage(String[] subscribeUsage){
+        this.subscribeUsage = subscribeUsage;
+    }
+
+    public void connect() throws MqttException, UnsupportedEncodingException {
         client = new MqttClient(HOST, SERVER_ID, new MemoryPersistence());
         MqttConnectOptions options = new MqttConnectOptions();
         options.setCleanSession(false);
@@ -45,9 +49,9 @@ public class Server {
         try {
             client.setCallback(new MqttCallBack());
             client.connect(options);
-            client.subscribe(SubscribeUsage.getTopicNameArray());
+            client.subscribe(subscribeUsage);
         } catch (Exception e) {
-            logger.error("连接分发");
+            logger.error("连接分发",e);
         }
     }
 }

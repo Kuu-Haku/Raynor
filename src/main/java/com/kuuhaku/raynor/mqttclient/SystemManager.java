@@ -1,0 +1,65 @@
+package com.kuuhaku.raynor.mqttclient;
+
+import com.kuuhaku.raynor.annotation.MessageUsage;
+import com.kuuhaku.raynor.annotation.ServiceBean;
+import com.kuuhaku.raynor.dealhandle.BaseDeal;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ApplicationObjectSupport;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @Author Kuuhaku
+ * @Date 2019/11/27 0:58
+ * @Description 管理所有的消息类型,提供根据消息类别名useage(String)获取消息类class的服务
+ */
+@Component
+public class SystemManager extends ApplicationObjectSupport {
+    private final static Logger logger = LoggerFactory.getLogger(SystemManager.class);
+    private static Map<String, Class> clazzMap = new HashMap<>();
+    private static Map<String, BaseDeal> dealMap = new HashMap<>();
+    private int count = 0;
+
+    @Autowired
+    private Server server;
+
+    @PostConstruct
+    private void init() throws MqttException, UnsupportedEncodingException {
+        ApplicationContext applicationContext = super.getApplicationContext();
+        Map<String, Object> beanMap = applicationContext.getBeansWithAnnotation(MessageUsage.class);
+        String[] usageArray = new String[beanMap.size()];
+        logger.info("订阅消息类型----开始加载:");
+        beanMap.forEach((name,bean)->{
+            logger.info("--->"+name);
+            String usage = bean.getClass().getAnnotation(MessageUsage.class).usage();
+            clazzMap.put(usage.toUpperCase(), bean.getClass());
+            //获取对应deal实现类
+            dealMap.put(usage.toUpperCase(),(BaseDeal) applicationContext.getBean(usage+"Deal"));
+            usageArray[count] = usage;
+            count++;
+        });
+        logger.info("订阅消息类型----加载完成("+count+")");
+        server.setSubscribeUsage(usageArray);
+        server.connect();
+    }
+
+    public static Class getClazz(String usage){
+        return clazzMap.get(usage.toUpperCase());
+    }
+    public static BaseDeal getDeal(String usage){
+        return dealMap.get(usage);
+    }
+    public static String[] getUsageArray(){
+        String[] usage = new String[clazzMap.size()];
+        clazzMap.keySet().toArray(usage);
+        return usage;
+    }
+}

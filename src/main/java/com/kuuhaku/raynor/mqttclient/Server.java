@@ -46,10 +46,8 @@ public class Server {
             client.setCallback(new MqttCallBack());
             client.connect(options);
             client.subscribe(SubscribeUsage.getTopicNameArray());
-
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("连接分发");
         }
-
     }
 }

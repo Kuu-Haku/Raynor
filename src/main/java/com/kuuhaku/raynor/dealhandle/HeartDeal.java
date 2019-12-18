@@ -1,6 +1,8 @@
 package com.kuuhaku.raynor.dealhandle;
 
 import com.kuuhaku.raynor.entity.HeartBeat;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
  */
 @Service("HeartDeal")
 public class HeartDeal implements BaseDeal<HeartBeat> {
+    private final static Logger logger = LogManager.getLogger(HeartDeal.class);
     private final static String USAGE = "Heart";
     @Override
     public String deal(List<HeartBeat> data) {

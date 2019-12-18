@@ -3,9 +3,10 @@ package com.kuuhaku.raynor.mqttclient;
 import com.kuuhaku.raynor.annotation.MessageUsage;
 import com.kuuhaku.raynor.annotation.ServiceBean;
 import com.kuuhaku.raynor.dealhandle.BaseDeal;
+import com.kuuhaku.raynor.util.MongoDBService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ApplicationObjectSupport;
@@ -23,13 +24,16 @@ import java.util.Map;
  */
 @Component
 public class SystemManager extends ApplicationObjectSupport {
-    private final static Logger logger = LoggerFactory.getLogger(SystemManager.class);
+    private final static Logger logger = LogManager.getLogger(SystemManager.class);
     private static Map<String, Class> clazzMap = new HashMap<>();
     private static Map<String, BaseDeal> dealMap = new HashMap<>();
+    private static Map<Class, Object> serviceBeanMap = new HashMap<>();
     private int count = 0;
 
     @Autowired
     private Server server;
+
+
 
     @PostConstruct
     private void init() throws MqttException, UnsupportedEncodingException {
@@ -47,6 +51,16 @@ public class SystemManager extends ApplicationObjectSupport {
             count++;
         });
         logger.info("订阅消息类型----加载完成("+count+")");
+        logger.info("ServiceBean----开始加载:");
+        count = 0;
+        beanMap = applicationContext.getBeansWithAnnotation(ServiceBean.class);
+        beanMap.forEach((name, bean) -> {
+            logger.info("--->" + name);
+            Class clazz = bean.getClass();
+            serviceBeanMap.put(clazz, bean);
+            count++;
+        });
+        logger.info("ServiceBean----加载完成(" + count + ")");
         server.setSubscribeUsage(usageArray);
         server.connect();
     }
@@ -56,6 +70,9 @@ public class SystemManager extends ApplicationObjectSupport {
     }
     public static BaseDeal getDeal(String usage){
         return dealMap.get(usage);
+    }
+    public static <T> T getService(Class<T> clazz) {
+        return (T) serviceBeanMap.get(clazz);
     }
     public static String[] getUsageArray(){
         String[] usage = new String[clazzMap.size()];

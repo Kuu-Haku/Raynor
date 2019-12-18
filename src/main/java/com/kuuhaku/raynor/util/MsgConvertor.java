@@ -6,6 +6,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.kuuhaku.raynor.mqttclient.BaseProtocol;
 import com.kuuhaku.raynor.mqttclient.SystemManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
  * @Date 2019/12/12 13:24
  **/
 public class MsgConvertor {
+    private final static Logger logger = LogManager.getLogger(MsgConvertor.class);
     private static final String USAGEKEY = "usage";
     private static final String CONTENTKEY = "content";
     private static final String DEVICESERIALKEY = "deviceSerial";

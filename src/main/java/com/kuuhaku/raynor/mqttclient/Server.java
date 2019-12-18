@@ -1,16 +1,14 @@
 package com.kuuhaku.raynor.mqttclient;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -20,19 +18,14 @@ import java.io.UnsupportedEncodingException;
  **/
 @Component
 public class Server {
-    private final static Logger logger = LoggerFactory.getLogger(Server.class);
-
+    private final static Logger logger = LogManager.getLogger(Server.class);
     //mqtt服务器地址
     @Value("${mqtt.host}")
     private String HOST;
     //服务器的clientID
     @Value("${mqtt.server.id}")
     private String SERVER_ID;
-
-    private String topic = "test";
-
     private MqttClient client;
-
     private String[] subscribeUsage;
 
     public void setSubscribeUsage(String[] subscribeUsage){
@@ -47,7 +40,7 @@ public class Server {
         // 设置会话心跳时间
         options.setKeepAliveInterval(20);
         try {
-            client.setCallback(new MqttCallBack());
+            client.setCallback(new ServerCallBack());
             client.connect(options);
             client.subscribe(subscribeUsage);
         } catch (Exception e) {

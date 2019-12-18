@@ -45,7 +45,7 @@ public class ServerCallBack implements MqttCallback {
 //            logger.error("error:",e);
 //        }
         try{
-            System.out.println(SystemManager.getService(HeartBeatServiceImpl.class).count());
+            logger.info(SystemManager.getService(HeartBeatServiceImpl.class).count());
         }catch (Exception e){
             System.out.println(e);
         }

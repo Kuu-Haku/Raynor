@@ -17,8 +17,7 @@ public class MqttCallBack implements MqttCallback {
 
     @Override
     public void messageArrived(String s, MqttMessage msg) throws Exception {
-
-        System.out.println("------->"+new String(msg.getPayload()));
+        //消息分拣
     }
 
     @Override

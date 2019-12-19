@@ -1,10 +1,19 @@
 package com.kuuhaku.raynor.util;
 
 import com.kuuhaku.raynor.annotation.ServiceBean;
+import com.kuuhaku.raynor.entity.BaseEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Description TODO
@@ -14,13 +23,42 @@ import org.springframework.stereotype.Service;
 @ServiceBean
 @Service
 public class MongoDBService {
+    private final static Logger logger = LogManager.getLogger(MongoDBService.class);
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    public void test() {
-        Query query = new Query();
+    private Date lastFlushTime = new Date();
 
-        Long count = mongoTemplate.count(query, "viewing_2019_12_08");
-        System.out.println("------------->:" + count);
+    //等待插入的数据集
+    private static Map<String, List<? extends BaseEntity>> waitInsertMap = new ConcurrentHashMap<>();
+
+
+    public void batchInsert(String colName, List dataList){
+        if(waitInsertMap.containsKey(colName)){
+            waitInsertMap.get(colName).addAll(dataList);
+        }else{
+            waitInsertMap.put(colName,dataList);
+        }
+    }
+
+    public synchronized int flush(){
+        Set<String> keys = waitInsertMap.keySet();
+        List data;
+        int count = 0;
+        for(String key:keys){
+            data = waitInsertMap.remove(key);
+            if(null == data || data.size() == 0){
+                continue;
+            }
+            count += data.size();
+            mongoTemplate.insert(data,key);
+        }
+        lastFlushTime = new Date();
+        return count;
+    }
+
+    public Date getLastFlushTime(){
+        return lastFlushTime;
     }
 }
+

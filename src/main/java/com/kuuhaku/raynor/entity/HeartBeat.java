@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @MessageUsage(usage="Heart")
-public class HeartBeat{
+public class HeartBeat extends BaseEntity{
 	
     private String deviceSerial = ""; //设备编号
     private String time         = ""; //时间

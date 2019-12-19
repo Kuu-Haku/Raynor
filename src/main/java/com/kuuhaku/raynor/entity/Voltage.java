@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Component
 @MessageUsage(usage="Voltage")
-public class Voltage{
+public class Voltage extends BaseEntity{
     private String groupName = "";
     
     private double voltage = 0D;//电压

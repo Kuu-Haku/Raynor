@@ -13,11 +13,11 @@ import java.util.List;
  * @Date 2019/12/13 14:55
  **/
 @Service("StatusDeal")
-public class StatusDeal implements BaseDeal<Status> {
+public class StatusDeal extends BaseDeal<Status> {
     private final static Logger logger = LogManager.getLogger(StatusDeal.class);
     @Override
     public String deal(List<Status> data) {
-        System.out.println("++++++++status数据:"+data.size());
+        System.out.println("++++++++status数据:");
         return null;
     }
 }

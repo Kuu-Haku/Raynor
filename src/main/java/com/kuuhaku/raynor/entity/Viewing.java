@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Component
 @MessageUsage(usage="Viewing")
-public class Viewing{
+public class Viewing extends BaseEntity{
     private String id         = "";  //id
     private String projectId ="";   //项目ID
     private String teamCode   = "";  //*机组编号    TEAM_CODE   VARCHAR2(40)

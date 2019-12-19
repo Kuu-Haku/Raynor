@@ -4,6 +4,7 @@ import com.kuuhaku.raynor.annotation.MessageUsage;
 import com.kuuhaku.raynor.annotation.ServiceBean;
 import com.kuuhaku.raynor.dealhandle.BaseDeal;
 import com.kuuhaku.raynor.util.MongoDBService;
+import com.kuuhaku.raynor.util.MongoWatchThread;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -32,6 +33,8 @@ public class SystemManager extends ApplicationObjectSupport {
 
     @Autowired
     private Server server;
+    @Autowired
+    private MongoDBService mongo;
 
 
 
@@ -47,7 +50,8 @@ public class SystemManager extends ApplicationObjectSupport {
             clazzMap.put(usage.toUpperCase(), bean.getClass());
             //获取对应deal实现类
             dealMap.put(usage.toUpperCase(),(BaseDeal) applicationContext.getBean(usage+"Deal"));
-            usageArray[count] = usage;
+            //单层匹配,批量接收某个类型的数据
+            usageArray[count] = usage+"/+";
             count++;
         });
         logger.info("订阅消息类型----加载完成("+count+")");
@@ -61,6 +65,11 @@ public class SystemManager extends ApplicationObjectSupport {
             count++;
         });
         logger.info("ServiceBean----加载完成(" + count + ")");
+        logger.info("启动mongodb数据定时入库");
+        MongoWatchThread timeWatch = new MongoWatchThread();
+        timeWatch.setMongo(mongo);
+        Thread watcher = new Thread(timeWatch);
+        watcher.start();
         server.setSubscribeUsage(usageArray);
         server.connect();
     }

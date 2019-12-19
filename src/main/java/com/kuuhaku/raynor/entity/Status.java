@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @MessageUsage(usage="Status")
-public class Status{
+public class Status extends BaseEntity{
     private String key = "";
     private String name = "";
     private String value = "";

@@ -1,7 +1,6 @@
 package com.kuuhaku.raynor.dao;
 
 
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
 /**

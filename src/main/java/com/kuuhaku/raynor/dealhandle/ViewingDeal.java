@@ -5,19 +5,29 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
- * @Description TODO
+ * @Description Viewing 数据处理模块(入库)
  * @Author Kuuhaku
  * @Date 2019/12/13 14:55
  **/
 @Service("ViewingDeal")
-public class ViewingDeal implements BaseDeal<Viewing> {
+public class ViewingDeal extends BaseDeal<Viewing> {
     private final static Logger logger = LogManager.getLogger(ViewingDeal.class);
     @Override
-    public String deal(List<Viewing> data) {
-        System.out.println("--------viewing数据:"+data.size());
+    public String deal(List<Viewing> datas) {
+        System.out.println("--------viewing数据:");
+        mongo.batchInsert(collectionNameBuild( new Date() ),datas);
         return null;
     }
+
+    public String collectionNameBuild( Date time ){
+        SimpleDateFormat ft = new SimpleDateFormat("'viewing'_yyyy_MM_dd");
+        String name = ft.format( time );
+        return name;
+    }
+
 }

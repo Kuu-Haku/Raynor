@@ -18,9 +18,7 @@ public class HeartDeal extends BaseDeal<HeartBeat> {
     private final static String USAGE = "Heart";
     @Override
     public String deal(List<HeartBeat> data) {
-        for(HeartBeat i : data){
-            System.out.println("_____________________heartBeat消息:"+i.toString());
-        }
+        heartBeatService.insert(data);
         return null;
     }
 }

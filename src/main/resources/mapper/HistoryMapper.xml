@@ -1,0 +1,29 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kuuhaku.raynor.dao.HistoryDao">
+    <insert id="insertHistory" parameterType="com.kuuhaku.raynor.entity.History" flushCache="true" statementType="PREPARED" useGeneratedKeys="false" >
+        INSERT INTO tb_history(
+            cl_id,
+            cl_deviceSerial,
+            cl_startTime,
+            cl_endTime,
+            cl_dashNumber,
+            cl_groupName,
+            cl_operatingPerson,
+            cl_createTime,
+            cl_rand
+        )VALUES(
+            #{ id },
+            #{ deviceSerial },
+            #{ startTime },
+            #{ endTime },
+            #{ dashNumber },
+            #{ groupName },
+            #{ operatingPerson },
+            #{ createTime },
+            #{ rand }
+        )
+    </insert>
+
+    
+</mapper>

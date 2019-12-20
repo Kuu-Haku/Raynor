@@ -20,10 +20,16 @@ public class VoltageDeal extends BaseDeal<Voltage> {
     @Override
     public String deal(List<Voltage> data) {
         String colName = null;
-
+        //mongo.batchInsert(collectionNameBuild( new Date() ),data);
+        System.out.print("voltage modal");
         return null;
     }
 
+    public String collectionNameBuild( Date time ){
+        SimpleDateFormat ft = new SimpleDateFormat("'voltage'_yyyy_MM");
+        String name = ft.format( time );
+        return name;
+    }
 
 
 }

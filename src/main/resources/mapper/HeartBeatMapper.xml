@@ -1,8 +1,134 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kuuhaku.raynor.dao.HeartBeatDao">
-    <select id="countAll" resultType="java.lang.Integer">
-        SELECT count(1) FROM tb_device
-    </select>
+    
+    <!-- void insert(HeartBeat heartBeat); -->
+    <insert id="insert" parameterType="com.kuuhaku.raynor.entity.HeartBeat" flushCache="true" statementType="PREPARED" useGeneratedKeys="false">
+    	INSERT INTO tb_heart_beat (
+			cl_deviceSerial,
+			cl_time,
+			cl_mobileCSQ,
+			cl_mobileGPS,
+			cl_mobileICCID,
+			cl_mobileCPSI,
+			cl_mobileLBSX,
+			cl_mobileLBSY
+		)
+		VALUES
+		(
+			#{deviceSerial},
+			#{time},
+			#{mobileCSQ},
+			#{mobileGPS},
+			#{mobileICCID},
+			#{mobileCPSI},
+			#{mobileLBSX},
+			#{mobileLBSY}
+		)
+    </insert>
+    
+    <!-- void delete(Map _p); -->
+    <delete id="delete" parameterType="map">
+    	delete from tb_heart_beat where cl_deviceSerial =#{deviceSerial}
+    </delete>
+	
+	<!-- void update(HeartBeat heartBeat); -->
+	<update id="update" parameterType="com.kuuhaku.raynor.entity.HeartBeat" statementType="PREPARED" flushCache="true">
+        UPDATE tb_heart_beat SET 
+            cl_time       =#{ time },
+            cl_mobileCSQ  =#{ mobileCSQ },
+            cl_mobileGPS  =#{ mobileGPS },
+            cl_mobileICCID =#{ mobileICCID },
+            cl_mobileCPSI =#{ mobileCPSI },
+            cl_mobileLBSX = #{ mobileLBSX },
+            cl_mobileLBSY = #{ mobileLBSY }
+        WHERE 
+            tb_heart_beat.cl_deviceSerial =#{ deviceSerial } 
+    </update>
+	<!-- HeartBeat get(Map _p); -->
+	<select id="get" parameterType="com.kuuhaku.raynor.entity.HeartBeat" resultMap="heartBeatMap" >
+		select * from tb_heart_beat where cl_deviceSerial = #{deviceSerial}
+	</select>
+	<!-- List<HeartBeat> getAll(); -->
+	<select id="getAll" resultMap="heartBeatMap">
+		select * from tb_heart_beat
+	</select>
+    <resultMap type="com.kuuhaku.raynor.entity.HeartBeat" id="heartBeatMap">
+    	<result column="cl_deviceSerial" property="deviceSerial" />
+    	<result column="cl_time" property="time" />
+    	<result column="cl_mobileCSQ" property="mobileCSQ" />
+    	<result column="cl_mobileGPS" property="mobileGPS" />
+    	<result column="cl_mobileICCID" property="mobileICCID" />
+    	<result column="cl_mobileCPSI" property="mobileCPSI" />
+    	<result column="cl_mobileLBSX" property="mobileLBSX" />
+    	<result column="cl_mobileLBSY" property="mobileLBSY" />
+    </resultMap>
+
+
+
+<!--单次连接,批量更新-->
+	 <update id="batchUpdate" parameterType="java.util.List">
+	     update tb_heart_beat
+	     <trim prefix="set" suffixOverrides=",">
+<!--	        <trim prefix="userName = case" suffix="end,">-->
+<!--	             <foreach collection="list" item="item" index="index">-->
+<!--	                when cl_deviceSerial=#{item.deviceSerial} then #{item.deviceSerial}-->
+<!--	             </foreach>-->
+<!--         	</trim>-->
+			 <trim prefix="cl_time = case" suffix="end,">
+	             <foreach collection="list" item="item" index="index">
+	                when cl_deviceSerial=#{item.deviceSerial} then #{item.time}
+	             </foreach>
+	         </trim>
+			 <trim prefix="cl_mobileCSQ = case" suffix="end,">
+				 <foreach collection="list" item="item" index="index">
+					when cl_deviceSerial=#{item.deviceSerial} then #{item.mobileCSQ}
+				 </foreach>
+			 </trim>
+			 <trim prefix="cl_mobileGPS = case" suffix="end,">
+				 <foreach collection="list" item="item" index="index">
+					when cl_deviceSerial=#{item.deviceSerial} then #{item.mobileGPS}
+				 </foreach>
+			 </trim>
+			 <trim prefix="cl_mobileICCID = case" suffix="end,">
+				 <foreach collection="list" item="item" index="index">
+					when cl_deviceSerial=#{item.deviceSerial} then #{item.mobileICCID}
+				 </foreach>
+			 </trim>
+			 <trim prefix="cl_mobileCPSI = case" suffix="end,">
+				 <foreach collection="list" item="item" index="index">
+					when cl_deviceSerial=#{item.deviceSerial} then #{item.mobileCPSI}
+				 </foreach>
+			 </trim>
+			 <trim prefix="cl_mobileLBSX = case" suffix="end,">
+				 <foreach collection="list" item="item" index="index">
+					when cl_deviceSerial=#{item.deviceSerial} then #{item.mobileLBSX}
+				 </foreach>
+			 </trim>
+			 <trim prefix="cl_mobileLBSY = case" suffix="end,">
+				 <foreach collection="list" item="item" index="index">
+					when cl_deviceSerial=#{item.deviceSerial} then #{item.mobileLBSY}
+				 </foreach>
+			 </trim>
+	     </trim>
+	     where cl_deviceSerial in
+	     <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+	         #{item.deviceSerial}
+	     </foreach>
+ </update>
+
+	<select id="getDeviceSerialList" resultType="java.util.List">
+			select cl_deviceSerial from tb_heart_beat group by cl_deviceSerial
+	</select>
+
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO tb_heart_beat
+		(cl_deviceSerial, cl_time, cl_mobileCSQ, cl_mobileGPS, cl_mobileLBSX, cl_mobileLBSY, cl_mobileICCID, cl_mobileCPSI)
+		VALUES
+		<foreach collection ="list" item="item" separator =",">
+			(#{item.deviceSerial}, #{item.time}, #{item.mobileCSQ},#{item.mobileGPS},#{item.mobileLBSX},#{item.mobileLBSY},#{item.mobileICCID},#{item.mobileCPSI})
+		</foreach >
+	</insert>
+
+
 </mapper>

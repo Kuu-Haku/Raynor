@@ -10,29 +10,29 @@
 
         <!--处理DEBUG级别的日志，并把该日志放到logs/debug.log文件中-->
         <!--打印出DEBUG级别日志，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
-        <RollingFile name="RollingFileLog" fileName="D:/test.log"
-                     filePattern="logs/$${date:yyyy-MM}/debug-%d{yyyy-MM-dd}-%i.log.gz">
-<!--            <Filters>-->
-<!--                <ThresholdFilter level="DEBUG"/>-->
-<!--                <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/>-->
-<!--            </Filters>-->
-            <PatternLayout
-                    pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %class{36} %L %M - %msg%xEx%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="500 MB"/>
-                <TimeBasedTriggeringPolicy/>
-            </Policies>
-        </RollingFile>
+<!--        <RollingFile name="RollingFileLog" fileName="D:/test.log"-->
+<!--                     filePattern="logs/$${date:yyyy-MM}/debug-%d{yyyy-MM-dd}-%i.log.gz">-->
+<!--&lt;!&ndash;            <Filters>&ndash;&gt;-->
+<!--&lt;!&ndash;                <ThresholdFilter level="DEBUG"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            </Filters>&ndash;&gt;-->
+<!--            <PatternLayout-->
+<!--                    pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %class{36} %L %M - %msg%xEx%n"/>-->
+<!--            <Policies>-->
+<!--                <SizeBasedTriggeringPolicy size="500 MB"/>-->
+<!--                <TimeBasedTriggeringPolicy/>-->
+<!--            </Policies>-->
+<!--        </RollingFile>-->
 
         <!--druid的日志记录追加器-->
-        <RollingFile name="druidSqlRollingFile" fileName="./logs/druid-sql.log"
-                     filePattern="logs/$${date:yyyy-MM}/api-%d{yyyy-MM-dd}-%i.log.gz">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %L %M - %msg%xEx%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="500 MB"/>
-                <TimeBasedTriggeringPolicy/>
-            </Policies>
-        </RollingFile>
+<!--        <RollingFile name="druidSqlRollingFile" fileName="./logs/druid-sql.log"-->
+<!--                     filePattern="logs/$${date:yyyy-MM}/api-%d{yyyy-MM-dd}-%i.log.gz">-->
+<!--            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %L %M - %msg%xEx%n"/>-->
+<!--            <Policies>-->
+<!--                <SizeBasedTriggeringPolicy size="500 MB"/>-->
+<!--                <TimeBasedTriggeringPolicy/>-->
+<!--            </Policies>-->
+<!--        </RollingFile>-->
     </appenders>
 
     <loggers>

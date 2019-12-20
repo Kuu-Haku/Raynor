@@ -18,14 +18,13 @@ import java.util.List;
 public class ViewingDeal extends BaseDeal<Viewing> {
     private final static Logger logger = LogManager.getLogger(ViewingDeal.class);
     @Override
-    public String deal(List<Viewing> datas) {
-        System.out.println("--------viewing数据:");
-        mongo.batchInsert(collectionNameBuild( new Date() ),datas);
+    public String deal(List<Viewing> data) {
+        //mongo.batchInsert(collectionNameBuild( new Date() ),data);
+        System.out.print("viewiing modal");
         return null;
     }
-
     public String collectionNameBuild( Date time ){
-        SimpleDateFormat ft = new SimpleDateFormat("'viewing'_yyyy_MM_dd");
+        SimpleDateFormat ft = new SimpleDateFormat("'viewing'_yyyy_MM");
         String name = ft.format( time );
         return name;
     }

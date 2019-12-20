@@ -1,14 +1,24 @@
 package com.kuuhaku.raynor.dao;
 
+import java.util.List;
+import java.util.Map;
 
-import org.springframework.stereotype.Component;
+import com.kuuhaku.raynor.entity.HeartBeat;
 
-/**
- * @Description 心跳
- * @Author Kuuhaku
- * @Date 2019/12/12 15:53
- **/
-@Component
 public interface HeartBeatDao {
-    Integer countAll();
+
+	void insert(HeartBeat heartBeat);
+	
+	void delete(Map _p);
+	
+	void update(HeartBeat heartBeat);
+	
+	HeartBeat get(Map _p);
+	
+	List<HeartBeat> getAll();
+
+	void batchUpdate(List<HeartBeat> heartBeats);
+	List<String> getDeviceSerialList();
+	void batchInsert(List<HeartBeat> heartBeats);
+	
 }

@@ -3,8 +3,6 @@ package com.kuuhaku.raynor.mqttclient;
 import com.kuuhaku.raynor.annotation.MessageUsage;
 import com.kuuhaku.raynor.annotation.ServiceBean;
 import com.kuuhaku.raynor.dealhandle.BaseDeal;
-import com.kuuhaku.raynor.util.MongoDBService;
-import com.kuuhaku.raynor.util.MongoWatchThread;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -33,8 +31,8 @@ public class SystemManager extends ApplicationObjectSupport {
 
     @Autowired
     private Server server;
-    @Autowired
-    private MongoDBService mongo;
+//    @Autowired
+//    private MongoDBService mongo;
 
 
 
@@ -65,11 +63,11 @@ public class SystemManager extends ApplicationObjectSupport {
             count++;
         });
         logger.info("ServiceBean----加载完成(" + count + ")");
-        logger.info("启动mongodb数据定时入库");
-        MongoWatchThread timeWatch = new MongoWatchThread();
-        timeWatch.setMongo(mongo);
-        Thread watcher = new Thread(timeWatch);
-        watcher.start();
+//        logger.info("启动mongodb数据定时入库");
+//        MongoWatchThread timeWatch = new MongoWatchThread();
+//        timeWatch.setMongo(mongo);
+//        Thread watcher = new Thread(timeWatch);
+//        watcher.start();
         server.setSubscribeUsage(usageArray);
         server.connect();
     }
